@@ -1,9 +1,11 @@
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import React, { Component, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { ZoomMtg } from '@zoomus/websdk';
 
 import NavBar from '../components/navbar'
 import styles from './zoom.module.css'
@@ -129,8 +131,6 @@ class ZoomComponent extends Component {
   }
 
   componentDidMount() {
-    const ZoomMtg = import("@zoomus/websdk");
-    //const ZoomMtg = zoomsdk.ZoomMtg(); 
     console.log('did mount');
     ZoomMtg.setZoomJSLib("https://source.zoom.us/1.7.9/lib", "/av");
     ZoomMtg.preLoadWasm();
