@@ -1,0 +1,18 @@
+.formInput {
+  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid #BABACC;
+  padding: 5px;
+}
+
+.meetingButton {
+  margin: 10px;
+  border-radius: 10px;
+  display: inline-block;
+  border: 1px solid #BABACC;
+  padding: 5px;
+}
+
+.buttonWrapper {
+  margin: 10px;
+}

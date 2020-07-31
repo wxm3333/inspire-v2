@@ -1,0 +1,111 @@
+import Head from 'next/head'
+import React, { useState, useEffect } from 'react';
+import { ZoomMtg } from "@zoomus/websdk";
+
+import NavBar from '../components/navbar'
+
+function ZoomComponent() {
+	const [meetingLaunched, setMeetingLaunched] = useState(false);
+	const [userName, setUserName] = useState('');
+  const [meetingNumber, setMeetingNumber] = useState(3323927035);
+  const [password, setPassword] = useState('6MQ1tr');
+  const apiKey = "AhYE37g2RRm28aINKVnCfA";
+
+  const zoomMeeting = document.getElementById("zmmtg-root")
+
+	const joinZoomMeeting = () => {
+    //setMeetingLaunched(!meetingLaunched);
+    fetch("https://inspire-zoom.herokuapp.com/", {
+      method: "POST",
+      body: JSON.stringify({
+        meetingNumber: meetingNumber,
+        role: 0
+      }),
+    })
+    .then((result) => result.text())
+    .then(
+      (response) => {
+        ZoomMtg.init({
+          leaveUrl: "http://ec2-3-80-117-236.compute-1.amazonaws.com/",
+          isSupportAV: true,
+          success() {
+            ZoomMtg.join({
+              meetingNumber: meetingNumber,
+              userName: userName,
+              signature: JSON.parse(response).signature,
+              apiKey: apiKey,
+              password: password,
+              success() {
+                console.log("join meeting success");
+              },
+              error(res1) {
+                console.log(res1);
+              },
+            },);
+          },
+          error(res2) {
+            console.log(res2);
+          },
+        });
+      },
+    );
+    };
+
+	useEffect(() => {
+    ZoomMtg.setZoomJSLib("https://dmogdx0jrul3u.cloudfront.net/1.7.9/lib", "/av");
+    ZoomMtg.preLoadWasm();
+    ZoomMtg.prepareJssdk();
+    zoomMeeting.style.display = "none";
+    joinZoomMeeting();
+	},);
+
+	return (
+    <>
+    {!meetingLaunched ? (
+      <>
+        <input
+          className="form__input"
+          type="text"
+          name="meetingNumber"
+          placeholder="Meeting #"
+          value={meetingNumber}
+          onChange={e => setMeetingNumber(e.target.value)}
+        />
+        <input
+          className="form__input"
+          type="text"
+          name="userName"
+          placeholder="Username"
+          value={userName}
+          onChange={e => setUserName(e.target.value)}
+        />
+        <input
+          className="form__input"
+          type="text"
+          name="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+        <button
+          onClick={() => this.joinZoomMeeting()}
+          className="button"
+        >
+          Join Meeting
+        </button>
+      </>
+    ) : (
+      <></>
+    )}
+    </>
+	);
+};
+
+export default function ZoomTab() {
+  return (
+    <>
+      <NavBar />
+			{ZoomComponent()}
+    </>
+  )
+}
